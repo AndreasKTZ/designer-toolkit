@@ -22,6 +22,12 @@ const autoCopyButtons = document.querySelectorAll('.toggle-btn[data-autocopy]');
 const defaultColorFormatSelect = document.getElementById('defaultColorFormat');
 const historyLimitSelect = document.getElementById('historyLimit');
 
+
+// Simulate Panel Elements
+const simButtons = document.querySelectorAll('.sim-btn');
+const resetSimulationBtn = document.getElementById('resetSimulation');
+const currentSimDisplay = document.getElementById('currentSim');
+
 // Config
 let historyLimit = 10;
 let defaultColorFormat = 'hex';
@@ -82,6 +88,7 @@ function switchTab(tabName) {
 tabs.forEach(tab => {
   tab.addEventListener('click', () => switchTab(tab.dataset.tab));
 });
+
 
 // ============================================
 // Color Picker Functions
@@ -649,6 +656,110 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 // ============================================
+// Color Blindness Simulation
+// ============================================
+
+const SIMULATION_LABELS = {
+  normal: 'Normal',
+  deuteranopia: 'Deuteranopia',
+  protanopia: 'Protanopia',
+  tritanopia: 'Tritanopia',
+  achromatopsia: 'Achromatopsia'
+};
+
+let currentSimulation = 'normal';
+
+function updateSimulationUI(type) {
+  currentSimulation = type;
+
+  // Update button states
+  simButtons.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === type);
+  });
+
+  // Update status display
+  if (currentSimDisplay) {
+    const label = SIMULATION_LABELS[type] || 'Normal';
+    currentSimDisplay.innerHTML = `Currently viewing: <strong>${label}</strong>`;
+  }
+}
+
+async function applySimulation(type) {
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    if (!tab?.id) {
+      console.error('No active tab found');
+      return;
+    }
+
+    // Inject the content script
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ['content-colorblind.js']
+    });
+
+    // Small delay to ensure script is loaded
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    // Send message to apply the filter
+    await chrome.tabs.sendMessage(tab.id, {
+      action: 'applyColorBlindness',
+      type: type
+    });
+
+    // Store the current simulation state
+    await chrome.storage.local.set({ currentSimulation: type });
+
+    updateSimulationUI(type);
+  } catch (err) {
+    console.error('Failed to apply simulation:', err);
+  }
+}
+
+async function removeSimulation() {
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    if (!tab?.id) {
+      console.error('No active tab found');
+      return;
+    }
+
+    // Try to send remove message (script might already be injected)
+    try {
+      await chrome.tabs.sendMessage(tab.id, {
+        action: 'removeColorBlindness'
+      });
+    } catch (e) {
+      // Script not injected, which is fine - nothing to remove
+    }
+
+    // Clear stored state
+    await chrome.storage.local.set({ currentSimulation: 'normal' });
+
+    updateSimulationUI('normal');
+  } catch (err) {
+    console.error('Failed to remove simulation:', err);
+  }
+}
+
+// Simulation button event listeners
+simButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.type;
+    if (currentSimulation === type) {
+      // Clicking active button turns it off
+      removeSimulation();
+    } else {
+      applySimulation(type);
+    }
+  });
+});
+
+resetSimulationBtn?.addEventListener('click', removeSimulation);
+
+// ============================================
 // Event Listeners
 // ============================================
 
@@ -697,7 +808,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Restore active tab
   const { activeTab } = await chrome.storage.local.get(['activeTab']);
   if (activeTab) {
-    switchTab(activeTab);
+    // Handle legacy tab names
+    let mappedTab = activeTab;
+    if (activeTab === 'wcag') mappedTab = 'contrast';
+    if (activeTab === 'simulate' || activeTab === 'a11y') mappedTab = 'colorblind';
+    switchTab(mappedTab);
   }
 
   // Load histories
@@ -715,4 +830,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize WCAG display
   updateWcagDisplay();
+
+  // Restore simulation state
+  const { currentSimulation: savedSimulation } = await chrome.storage.local.get(['currentSimulation']);
+  if (savedSimulation && savedSimulation !== 'normal') {
+    updateSimulationUI(savedSimulation);
+  }
 });

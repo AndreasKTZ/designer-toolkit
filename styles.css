@@ -59,17 +59,17 @@ body {
 /* Tab Bar */
 .tab-bar {
   display: flex;
+  justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
   background: var(--bg-tertiary);
 }
 
 .tab {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 10px 8px;
+  gap: 6px;
+  padding: 10px 12px;
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -78,7 +78,15 @@ body {
   border-bottom: 2px solid transparent;
   cursor: pointer;
   transition: all 0.15s ease;
-  min-width: 0;
+  white-space: nowrap;
+}
+
+.tab-label {
+  display: none;
+}
+
+.tab.active .tab-label {
+  display: inline;
 }
 
 .tab:hover {
@@ -98,18 +106,6 @@ body {
   flex-shrink: 0;
 }
 
-/* Icon-only tab (settings) */
-.tab.tab-icon {
-  flex: 0;
-  min-width: 40px;
-  padding: 10px;
-  border-left: 1px solid var(--border-color);
-}
-
-.tab.tab-icon svg {
-  width: 16px;
-  height: 16px;
-}
 
 /* Panels */
 .panel {
@@ -836,3 +832,121 @@ body {
   max-height: 300px;
   overflow-y: auto;
 }
+
+/* Simulate Panel */
+.simulate-main {
+  padding: 12px 8px;
+}
+
+.panel-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.sim-category {
+  margin-bottom: 16px;
+}
+
+.sim-category-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px 0;
+}
+
+.simulation-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sim-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.sim-btn:hover {
+  border-color: var(--accent-color);
+  background: var(--bg-hover);
+}
+
+.sim-btn.active {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+}
+
+.sim-btn.active .sim-label {
+  color: var(--bg-primary);
+}
+
+.sim-btn.active .sim-desc {
+  color: var(--bg-primary);
+  opacity: 0.8;
+}
+
+.sim-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sim-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.btn-secondary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
+}
+
+.btn-secondary svg {
+  width: 16px;
+  height: 16px;
+}
+
+.current-simulation {
+  text-align: center;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.current-simulation strong {
+  color: var(--text-primary);
+}
+
