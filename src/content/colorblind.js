@@ -11,69 +11,82 @@
   // Color transformation matrices based on scientific research
   // Source: Machado, Oliveira, Fernandes (2009)
   // "A Physiologically-based Model for Simulation of Color Vision Deficiency"
-  const COLOR_MATRICES = {
-    // ===== ANOMALOUS TRICHROMACY (partial/weak) =====
-    // Protanomaly - Red-weak (~1% of males)
-    protanomaly: [
-      0.817, 0.183, 0, 0, 0,
-      0.333, 0.667, 0, 0, 0,
-      0, 0.125, 0.875, 0, 0,
-      0, 0, 0, 1, 0
-    ],
-    // Deuteranomaly - Green-weak (most common, ~5% of males)
-    deuteranomaly: [
-      0.8, 0.2, 0, 0, 0,
-      0.258, 0.742, 0, 0, 0,
-      0, 0.142, 0.858, 0, 0,
-      0, 0, 0, 1, 0
-    ],
-    // Tritanomaly - Blue-weak (rare)
-    tritanomaly: [
-      0.967, 0.033, 0, 0, 0,
-      0, 0.733, 0.267, 0, 0,
-      0, 0.183, 0.817, 0, 0,
-      0, 0, 0, 1, 0
-    ],
+/**
+ * Machado et al. (2009)
+ * Severity ≈ 1.0 (full deficiency)
+ * Color space: LINEAR RGB
+ * Format: 4x5 color matrix
+ */
 
-    // ===== DICHROMACY (complete absence) =====
-    // Protanopia - Red-blind (~1% of males)
-    protanopia: [
-      0.567, 0.433, 0, 0, 0,
-      0.558, 0.442, 0, 0, 0,
-      0, 0.242, 0.758, 0, 0,
-      0, 0, 0, 1, 0
-    ],
-    // Deuteranopia - Green-blind (~1% of males)
-    deuteranopia: [
-      0.625, 0.375, 0, 0, 0,
-      0.7, 0.3, 0, 0, 0,
-      0, 0.3, 0.7, 0, 0,
-      0, 0, 0, 1, 0
-    ],
-    // Tritanopia - Blue-blind (rare, ~0.003%)
-    tritanopia: [
-      0.95, 0.05, 0, 0, 0,
-      0, 0.433, 0.567, 0, 0,
-      0, 0.475, 0.525, 0, 0,
-      0, 0, 0, 1, 0
-    ],
+const COLOR_MATRICES = {
+  // ===== DICHROMACY (complete absence) =====
+  // Protanopia - Red-blind (~1% of males)
+  protanopia: [
+    0.152286, 1.052583, -0.204868, 0, 0,
+    0.114503, 0.786281,  0.099216, 0, 0,
+   -0.003882, -0.048116, 1.051998, 0, 0,
+    0, 0, 0, 1, 0
+  ],
 
-    // ===== MONOCHROMACY (no color) =====
-    // Achromatopsia - Complete color blindness (rod monochromacy)
-    achromatopsia: [
-      0.299, 0.587, 0.114, 0, 0,
-      0.299, 0.587, 0.114, 0, 0,
-      0.299, 0.587, 0.114, 0, 0,
-      0, 0, 0, 1, 0
-    ],
-    // Achromatomaly - Partial monochromacy (blue cone monochromacy)
-    achromatomaly: [
-      0.618, 0.320, 0.062, 0, 0,
-      0.163, 0.775, 0.062, 0, 0,
-      0.163, 0.320, 0.516, 0, 0,
-      0, 0, 0, 1, 0
-    ]
-  };
+  // Deuteranopia - Green-blind (~1% of males)
+  deuteranopia: [
+    0.367322, 0.860646, -0.227968, 0, 0,
+    0.280085, 0.672501,  0.047413, 0, 0,
+   -0.011820, 0.042940,  0.968881, 0, 0,
+    0, 0, 0, 1, 0
+  ],
+
+  // Tritanopia - Blue-blind (rare, ~0.003%)
+  tritanopia: [
+    1.255528, -0.076749, -0.178779, 0, 0,
+   -0.078411, 0.930809,  0.147602, 0, 0,
+    0.004733, 0.691367,  0.303900, 0, 0,
+    0, 0, 0, 1, 0
+  ],
+
+  // ===== ANOMALOUS TRICHROMACY (partial/weak) =====
+  // Protanomaly - Red-weak (~1% of males)
+  protanomaly: [
+    0.458064, 0.679578, -0.137642, 0, 0,
+    0.092785, 0.846313,  0.060902, 0, 0,
+   -0.007494, -0.016807, 1.024301, 0, 0,
+    0, 0, 0, 1, 0
+  ],
+
+  // Deuteranomaly - Green-weak (most common, ~5% of males)
+  deuteranomaly: [
+    0.547494, 0.607765, -0.155259, 0, 0,
+    0.181692, 0.781742,  0.036566, 0, 0,
+   -0.010410, 0.027275,  0.983136, 0, 0,
+    0, 0, 0, 1, 0
+  ],
+
+  // Tritanomaly - Blue-weak (rare)
+  tritanomaly: [
+    1.017277, 0.027029, -0.044306, 0, 0,
+   -0.006113, 0.958479,  0.047634, 0, 0,
+    0.006379, 0.248708,  0.744913, 0, 0,
+    0, 0, 0, 1, 0
+  ],
+
+  // ===== MONOCHROMACY =====
+  // Achromatopsia - Complete color blindness (rod monochromacy)
+  achromatopsia: [
+    0.299, 0.587, 0.114, 0, 0,
+    0.299, 0.587, 0.114, 0, 0,
+    0.299, 0.587, 0.114, 0, 0,
+    0, 0, 0, 1, 0
+  ],
+
+  // Achromatomaly - Partial monochromacy (blue cone monochromacy)
+  achromatomaly: [
+    0.618, 0.320, 0.062, 0, 0,
+    0.163, 0.775, 0.062, 0, 0,
+    0.163, 0.320, 0.516, 0, 0,
+    0, 0, 0, 1, 0
+  ]
+};
+
 
   const SVG_ID = '__dt-colorblind-svg';
   const FILTER_ID = '__dt-colorblind-filter';
