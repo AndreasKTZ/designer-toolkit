@@ -28,6 +28,12 @@ Check color contrast ratios for accessibility compliance. Enter or pick foregrou
 - WCAG AA pass/fail status
 - WCAG AAA pass/fail status
 
+### Color Blindness Simulator
+Simulate how pages appear to people with color vision deficiency. Supports:
+- Anomalous trichromacy (protanomaly, deuteranomaly, tritanomaly)
+- Dichromacy (protanopia, deuteranopia, trianopia)
+- Monochromacy (achromatopsia, achromatomaly)
+
 ### Styles Grabber
 Select any element on a page to extract its computed CSS properties.
 

@@ -24,7 +24,7 @@ async function handlePickFont() {
         // Inject the font picker content script
         await chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            files: ['content.js']
+            files: ['src/content/content.js']
         });
 
         // Also inject styles for the overlay
@@ -95,7 +95,7 @@ async function handleGrabStyles() {
         // Inject the styles grabber content script
         await chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            files: ['content-styles.js']
+            files: ['src/content/styles.js']
         });
     } catch (err) {
         console.error('Error injecting styles grabber:', err);
