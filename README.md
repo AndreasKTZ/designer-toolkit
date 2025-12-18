@@ -46,7 +46,7 @@ Select any element on a page to extract its computed CSS properties.
 
 ## Installation
 
-Install from the [Chrome Web Store](https://chromewebstore.google.com/).
+Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/designer-toolkit/abgagcbniolgibnfnglkpldlojmklfif).
 
 ## Permissions
 
